@@ -1,24 +1,32 @@
-import { useState } from "react"
+import { useRef } from "react"
 
-const UserForm = ({onFormSubmit}) => {
+const UserForm = ({onFormSubmit, firstname, lastname}) => {
 
-    const [firstName, setFirstName] = useState()
-    const [lastName, setLastName] = useState()
+    const firstnameRef = useRef()
+    const lastnameRef = useRef()
 
     const onSubmit = (e) => {
         e.preventDefault()
-        onFormSubmit(firstName, lastName)
+        if(firstnameRef.current && lastnameRef.current){
+            onFormSubmit(firstnameRef.current.value, lastnameRef.current.value)
+    }else{
+        console.log("Please fill all the information")
     }
+}
 
     return <form onSubmit={onSubmit}>
         <input 
             type="text" 
-            placeholder="firstName" 
-            onChange={e => setFirstName(e.target.value)}/>
+            placeholder="firstname" 
+            ref={firstnameRef}
+            defaultValue={firstname}
+        />
         <input 
             type="text" 
-            placeholder="lastName" 
-            onChange={e => setLastName(e.target.value)}/>
+            placeholder="lastname" 
+            ref={lastnameRef}
+            defaultValue={lastname}
+        />
         <button>Submit</button>
     </form>
 }
