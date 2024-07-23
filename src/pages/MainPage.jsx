@@ -1,25 +1,12 @@
 import { Link } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-import useRequest from "../hooks/useRequest";
+import { useUsersContext } from "../contexts/UsersContext";
+import { themeOptions, useThemeContext } from "../contexts/ThemeContext";
 
 const MainPage = () => {
+  const {theme} = useThemeContext()
+  const {userList, deleteLoading, dataLoading, onDelete} = useUsersContext()
 
-    const {response, error, loading, resendRequest} = useFetch({url: '/api/v1/users', method: 'GET'})
-    const {sendRequest} = useRequest({method: 'DELETE'})
-    const userList = response?.items.map(user => {
-      return{
-        firstname: user.firstname,
-        lastname: user.lastname,
-        id: user._uuid
-        }
-    }) || []
-
-    const onDelete = (userId) => {
-        sendRequest(null, `/api/v1/users/${userId}`).then(() => resendRequest())
-    }
-
-  if (loading) return <p>Loading . . .</p>;
-  if (error) return <p>{error}</p>;
+  if (dataLoading || deleteLoading) return <p>Loading . . .</p>;
 
   return (
     <div className="App">
@@ -30,6 +17,7 @@ const MainPage = () => {
           <button onClick={() => onDelete(user.id)}>Delete</button>
         </div>
       )}
+      <p>{themeOptions[theme]}</p>
     </div>
   );
 };

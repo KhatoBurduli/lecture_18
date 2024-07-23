@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import UserForm from "../components/UserForm"
 import useRequest from "../hooks/useRequest"
+import { themeOptions, useThemeContext } from "../contexts/ThemeContext"
 
 const CreatePage = () => {
+    const {theme} = useThemeContext()
     const {sendRequest, loading} = useRequest({url: '/api/v1/users', method: 'POST'})
     const navigate = useNavigate()
 
@@ -12,7 +14,10 @@ const CreatePage = () => {
             .catch(err => console.log(err))
     }
     if(loading) return <p>Loading . . .</p>
-    return <UserForm onFormSubmit={onSubmit}/>
-}
+    return (<div>
+            <UserForm onFormSubmit={onSubmit}/>
+            <p>{themeOptions[theme]}</p>
+        </div>)
+    }
 
 export default CreatePage
